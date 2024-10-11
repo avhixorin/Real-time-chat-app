@@ -2,12 +2,12 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home/Home';
-
 // Lazy load components
 
 const Login = React.lazy(() => import('./components/sign-in/Signin'));
 const Signup = React.lazy(() => import('./components/sign-up/Signup'));
 const Dashboard = React.lazy(() => import('./components/dashboard/Chat/Parent'));
+const RestyledDashboard = React.lazy(() => import('./components/Dashboard (Restyled))/Dashboard'));
 const App: React.FC = () => {
   
 
@@ -22,6 +22,7 @@ const App: React.FC = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path='/dashboard' element={<Dashboard />} />
+                <Route path='/secret-dashboard' element={<RestyledDashboard />} />
               </Routes>
             </Suspense>
       </div>
