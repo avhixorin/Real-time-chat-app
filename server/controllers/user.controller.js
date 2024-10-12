@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-
+import cloudinaryUpload from "../utils/cloudinaryUpload.js";
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -53,10 +53,27 @@ const getAllUsers = async (req, res) => {
 }
 
 
-const uploadController = (req, res) => {
-  console.log(req.files);
-  
-  res.status(200).json({ message: "File uploaded successfully" });
+const uploadController = async(req, res) => {
+  const { userId } = req.body;
+  console.log("This is the user ID of the user uploading the file", userId);
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  try {
+    const cloudinaryReponse = await cloudinaryUpload(req.file.path);
+
+    if(!cloudinaryReponse.url) return res.status(500).json({ message: "File upload failed" });
+
+    const user = await User.findById(req.body.userId);
+    user.profilePic = cloudinaryReponse.url;
+    await user.save();
+    
+    res.status(200).json({ message: "File uploaded successfully" });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 
