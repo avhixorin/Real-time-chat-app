@@ -5,8 +5,8 @@ import { User } from "./allUsersSlice";
 
 // Define the structure of a single FriendRequest
 export interface FriendRequest {
-  from: User | null;
-  date: Date | string;
+  from: User;
+  date: Date;
 }
 
 // Define the structure of the slice state

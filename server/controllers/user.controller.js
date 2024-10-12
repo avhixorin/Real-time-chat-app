@@ -30,11 +30,11 @@ const getAllFriends = async (req, res) => {
     const { loggedInUserId } = req.body;
     if (loggedInUserId) console.log("This is the userId of the currently logged in user", loggedInUserId);
 
-    const users = await User.find({ _id: { $ne: loggedInUserId } }).select("_id name email username profilePic");
-    
+    const usersFriends = await User.find(loggedInUserId).select("friends");
+
     res.status(200).json({
       message: `All the friends of the user with ID ${loggedInUserId} have been fetched successfully`,
-      users: users
+      friends: usersFriends
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -43,9 +43,13 @@ const getAllFriends = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("_id name email username profilePic");
+    const { loggedInUserId } = req.body;
+    if (loggedInUserId) console.log("This is the userId of the currently logged in user", loggedInUserId);
+
+    const users = await User.find({ _id: { $ne: loggedInUserId } }).select("_id name email username profilePic");
+    
     res.status(200).json({
-      message: "All users have been fetched successfully",
+      message: `All the friends of the user with ID ${loggedInUserId} have been fetched successfully`,
       users: users
     });
   } catch (error) {

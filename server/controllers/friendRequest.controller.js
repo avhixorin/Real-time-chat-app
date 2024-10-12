@@ -56,22 +56,19 @@ const handleFriendRequest = async (req, res) => {
 const acceptFriendRequest = async (req, res) => {
   try {
     const { requester, accepter, status } = req.params;
-    console.log("requester", requester);
-    console.log("accepter", accepter);
-    console.log("status", status);
 
     // Fetch both users
-    const userAccepter = await User.findById(new mongoose.Types.ObjectId(accepter));
-    const userRequester = await User.findById(new mongoose.Types.ObjectId(requester));
+    const userAccepter = await User.findById(accepter);
+    const userRequester = await User.findById(requester);
 
     if (!userAccepter || !userRequester) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // Check if the friend request exists
-    const requestIndex = userAccepter.friendRequests.findIndex((friendRequest) => {
-      return friendRequest && friendRequest.from && friendRequest.from.toString() === requester.toString();
-    });
+    const requestIndex = userAccepter.friendRequests.findIndex(
+      (friendRequest) => friendRequest.from.toString() === requester.toString()
+    );
 
     if (requestIndex === -1) {
       return res.status(404).json({ message: "Friend request not found" });
@@ -81,31 +78,37 @@ const acceptFriendRequest = async (req, res) => {
     userAccepter.friendRequests[requestIndex].status = status;
     await userAccepter.save();
 
-    // Add friend to both users if accepted
+    // If status is accepted, add friends to both users
     if (status === "accepted") {
-      userAccepter.friends.push(new mongoose.Types.ObjectId(requester));
-      userRequester.friends.push(new mongoose.Types.ObjectId(accepter));
+      userAccepter.friends.push(userRequester._id);
+      userRequester.friends.push(userAccepter._id);
       await userAccepter.save();
       await userRequester.save();
     }
+
+    // Populate the updated friends list for the accepter
+    const updatedUserAccepter = await User.findById(accepter).populate('friends', '_id name username email profilePic');
+    const updatedUserRequester = await User.findById(requester).populate('friends', '_id name username email profilePic');
 
     // Emit event to requester
     if (users[requester]) {
       io.to(users[requester]).emit("friendRequesterNotification", {
         requestStatus: status
-      } );
+      });
     } else {
       console.log("The user is not online");
     }
 
     res.status(200).json({
       message: `Friend request from user ${userRequester.name} to user ${userAccepter.name} has been ${status}.`,
+      updatedUserAccepter, // Return the accepter with the populated friends
     });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 export { handleFriendRequest, acceptFriendRequest };

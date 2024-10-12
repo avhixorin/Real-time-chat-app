@@ -4,13 +4,14 @@ import LeftSideBar from "./leftSideBar/LeftSideBar";
 import MessageWindow from "./messageWindow/MessageWindow";
 import RightSideBar from "./RightSideBar/RightSideBar";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../Redux/store";
 import CloseIcon from '@mui/icons-material/Close';
-import { useAllUsers } from "@/components/Hooks/useAllUsers";
+import { removeFriendRequest } from "@/Redux/features/friendRequestSlice";
 
 const Parent: React.FC = () => {
-  const allusers = useAllUsers();
+  const defaultProfilePic = "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png";
+  const dispatch = useDispatch();
   const [acceptButtonText, setAcceptButtonText] = useState<string>("Accept");
   const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
   const friendRequests = useSelector(
@@ -33,12 +34,8 @@ const Parent: React.FC = () => {
     setIsFriendRequestSectionOpen((prev) => !prev);
   };
 
-  const findUserName = (userId: string) => {
-    const user = allusers.find((user) => user._id === userId);
-    return [user ? user.name : "Unknown User", user ? user.profilePic : "", user ? user.username : ""];
-  };
 
-  const handleRequest = async (requester: string, accepter: string, status: string) => {
+  const handleRequest = async (requester: string, accepter: string, status: string,index:number) => {
     try {
       setAcceptButtonText("wait..");
       const response = await fetch(
@@ -54,7 +51,7 @@ const Parent: React.FC = () => {
 
       const data = await response.json();
       setAcceptButtonText(status === "accepted" ? "Accepted" : "Rejected");
-
+      dispatch(removeFriendRequest(index))
       setTimeout(() => {
         setIsFriendRequestSectionOpen(false);
         setAcceptButtonText("Accept");
@@ -137,24 +134,23 @@ const Parent: React.FC = () => {
                 <CloseIcon className="cursor-pointer" />
               </div>
             </div>
-            <ul>
+            <ul className="flex flex-col gap-2">
               {friendRequests && friendRequests.length > 0 ? (
                 friendRequests.map((request, index) => {
-                  const [name, profilePic, username] = findUserName(request.from?._id);
                   return (
                     <li key={index} className="flex justify-between items-center gap-4">
-                      <img src={profilePic} className="w-8 h-8 rounded-full shadow-lg" alt="" />
-                      <p>{name}</p>
-                      <p>{username}</p>
+                      <img src={request.from?.profilePic || defaultProfilePic} className="w-8 h-8 rounded-full shadow-lg" alt="" />
+                      <p>{request.from?.name}</p>
+                      <p>{request.from?.username}</p>
                       <button
                         className="bg-green-500 text-white py-1 px-2 rounded-lg hover:bg-green-600"
-                        onClick={() => loggedInUser && handleRequest(request.from?._id, loggedInUser._id, "accepted")}
+                        onClick={() => loggedInUser && handleRequest(request.from?._id, loggedInUser._id, "accepted",index)}
                       >
                         {acceptButtonText}
                       </button>
                       <button
                         className="bg-red-500 text-white py-1 px-2 rounded-lg hover:bg-red-600"
-                        onClick={() => loggedInUser && handleRequest(request.from?._id, loggedInUser._id, "rejected")}
+                        onClick={() => loggedInUser && handleRequest(request.from?._id, loggedInUser._id, "rejected",index)}
                       >
                         Reject
                       </button>

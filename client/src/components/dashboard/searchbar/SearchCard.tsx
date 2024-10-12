@@ -8,6 +8,7 @@ interface SearchCardProps {
 }
 
 const SearchCard:React.FC<SearchCardProps> = ({ user }) => {
+  const defaultProfilePic = "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png"; 
   const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
   
   const handleFriendRequest = async() => {
@@ -36,7 +37,7 @@ const SearchCard:React.FC<SearchCardProps> = ({ user }) => {
   return (
     <div className='w-full flex py-3 px-4 gap-6 items-center justify-around transition-colors duration-300 border-b border-gray-300 cursor-pointer'>
 
-      <img src={user.profilePic} alt="User Avatar" className='w-10 h-10 rounded-full shadow-lg' />
+      <img src={user.profilePic || defaultProfilePic} alt="User Avatar" className='w-10 h-10 rounded-full shadow-lg' />
       
       <div className='flex flex-col flex-grow'>
         <p className='font-semibold text-base text-gray-800'>{user.name}</p>

@@ -13,18 +13,17 @@ const SearchBar: React.FC = () => {
   const allUsers = useAllUsers();
 
   useEffect(() => {
-    // Filter users when searchTerm changes
     const getFilteredUsers = () => {
       const filtered = allUsers.filter(
         (user) =>
           (user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.username?.toLowerCase().includes(searchTerm.toLowerCase())) // Check if name or username exists before using toLowerCase()
+          user.username?.toLowerCase().includes(searchTerm.toLowerCase()))
       );
-      setFilteredUsers(filtered); // Update state with filtered users
+      setFilteredUsers(filtered); 
     };
 
     getFilteredUsers();
-  }, [searchTerm, allUsers]); // Trigger on searchTerm or allUsers change
+  }, [searchTerm, allUsers]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -37,7 +36,7 @@ const SearchBar: React.FC = () => {
       dropdownRef.current &&
       !dropdownRef.current.contains(e.target as Node)
     ) {
-      setSearchTerm(""); // Clear the search term when clicked outside
+      setSearchTerm("");
     }
   }, []);
 

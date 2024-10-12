@@ -13,6 +13,7 @@ interface Props {
 }
 
 const RightSideBar: React.FC<Props> = ({handleFriendRequestPanelClick}) => {
+  const defaultProfilePic = "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png";
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
@@ -36,7 +37,7 @@ const RightSideBar: React.FC<Props> = ({handleFriendRequestPanelClick}) => {
       </div>
       <div className="w-24 h-24 mb-4">
         <img
-          src={loggedInUser?.profilePic || "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png"}
+          src={loggedInUser?.profilePic || defaultProfilePic}
           
           alt={`${loggedInUser?.name}'s Profile`}
           className="rounded-full w-full h-full object-cover border-2 border-gray-300"

@@ -5,13 +5,16 @@ import { RootState } from "../../../../Redux/store";
 import { addMessage, clearMessagesForUser, Message } from "../../../../Redux/features/messagesSlice";
 import { useSocket } from "../../../Hooks/useSocket";
 
+
 const Chat: React.FC = () => {
+  const defaultProfilePic = "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png";
   const loggedInUser = useSelector((state: RootState) => state.loggedInUser) as { _id: string } | null;
   const dispatch = useDispatch();
   const [isOnline] = useState(true);
   const [message, setMessage] = useState("");
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
+
 
   const selectedUser = useSelector((state: RootState) => state.selectedUser.selectedUser);
   const messages = useSelector((state: RootState) =>
@@ -52,35 +55,32 @@ const Chat: React.FC = () => {
     }
   };
 
+  const allFriends = useSelector((state: RootState) => state.allFriends.allFriends);
+
   
   return (
     <div className="w-full h-full flex flex-col justify-center items-center bg-[#fffcf8]">
       {/* Chat Area */}
       <div className="h-full w-full bg-[#fbf1e3] rounded-md flex overflow-hidden shadow-xl">
         <main className="flex flex-col h-full w-full">
-          {/* Header */}
+          {
+            allFriends.length > 0 ? (
+              <>
+              {/* Header */}
           <header className="w-full py-2 px-4 flex items-center justify-between bg-[#00A884] text-slate-200">
-            {
-              selectedUser ? (
-                <>
-                <div className="flex gap-6 items-center">
+            <div className="flex gap-6 items-center">
               <img
-                src={selectedUser?.profilePic || "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png"}
+                src={selectedUser?.profilePic || defaultProfilePic}
                 className="rounded-full w-10 h-10"
                 alt="User Profile"
               />
               <h3 className="font-medium text-lg">
-                {selectedUser?.name || "User Name"}
+                {selectedUser?.name || "Select a user to start chatting"}
               </h3>
             </div>
             <h3 className={isOnline ? "text-[#d7d0d0]" : "text-slate-400"}>
               {isOnline ? "Active now" : "Last online: 12:53 AM"}
             </h3>
-                </>
-              ) : (
-                "Select a user to start chatting"
-              )
-            }
           </header>
 
           {/* Chat Area (Messages) */}
@@ -119,6 +119,14 @@ const Chat: React.FC = () => {
               Clear Messages
             </button>
           </footer>
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full">
+              <p className="text-xl text-gray-500">No friends to chat with.</p>
+              <p className="text-lg text-gray-400">Send friend requests to start chatting!</p>
+            </div>
+            )
+          }
         </main>
       </div>
     </div>

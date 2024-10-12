@@ -31,7 +31,7 @@ export const useAllFriends = () => {
       }
 
       const data = await response.json();
-      dispatch(setAllFriends(data.users));
+      dispatch(setAllFriends(data.friends));
       
     } catch (error) {
       console.error("Error fetching users:", error);

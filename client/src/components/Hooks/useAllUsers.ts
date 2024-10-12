@@ -39,6 +39,7 @@ export const useAllUsers = () => {
 
   useEffect(() => {
     getAllUsers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedInUserId]);
 
   return allUsers;
