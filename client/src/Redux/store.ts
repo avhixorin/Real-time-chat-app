@@ -7,6 +7,7 @@ import allUsersSlice from "./features/allUsersSlice"
 import selectedUserSlice from "./features/selectedUserSlice";
 import notificationSlice from "./features/notificationsSlice"
 import messagesSlice from "./features/messagesSlice"; 
+import friendRequestSlice from "./features/friendRequestSlice";
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist/es/constants";
 
 const persistConfig = {
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   allUsers:allUsersSlice,
   selectedUser: selectedUserSlice,
   messages: messagesSlice,
-  notifications:notificationSlice
+  notifications:notificationSlice,
+  friendRequests: friendRequestSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

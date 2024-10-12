@@ -16,6 +16,7 @@ export interface User {
 const initialState: User = {
   _id: '',
   name: "",
+  username: "",
   email: "",
   password: "",
   profilePic: "",

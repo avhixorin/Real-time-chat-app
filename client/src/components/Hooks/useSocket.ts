@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { addMessage, Message } from "../../Redux/features/messagesSlice";
 import { Notification, setNotification } from "../../Redux/features/notificationsSlice";
+import { FriendRequest, addFriendRequest } from "@/Redux/features/friendRequestSlice";
 
 export const useSocket = (): Socket | null => {
   const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
@@ -32,14 +33,30 @@ export const useSocket = (): Socket | null => {
         dispatch(addMessage({ userId: from, message: newMessage }));
       });
 
-      newSocket.on("friendRequestNotification", ({ status,from }) => {
-        const newNotification:Notification = {
-          from:from,
-          status:status
+      newSocket.on("friendRequestNotification", ({ userFrom }) => {
+
+        if(userFrom){
+          const newNotification:Notification = {
+            message: `You have a friend request from ${userFrom?.name || "Unknown User"}`,
+          }
+          dispatch(setNotification(newNotification));
+
+          const newFriendRequest:FriendRequest = {
+            from: userFrom,
+            date: new Date().toISOString(),
+          }
+          dispatch(addFriendRequest(newFriendRequest));
+        }else{
+          console.log("The received userFrom is undefined");
         }
-        dispatch(setNotification(newNotification))
-        alert(`Friend Request ${status}`)
       });
+
+      newSocket.on("friendRequesterNotification",({requestStatus}) => {
+        const newNotification:Notification = {
+          message: `Your friend request was ${requestStatus}`,
+        }
+        dispatch(setNotification(newNotification));
+      })
 
       newSocket.on("connect_error", (error) => {
         console.error("Connection error:", error);

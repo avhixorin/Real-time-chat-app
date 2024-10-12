@@ -30,7 +30,6 @@ export const useAllUsers = () => {
 
       const data = await response.json();
       dispatch(setAllUsers(data.users));
-      console.log("this the is the data that was set in the allusers slice", allUsers);
       
     } catch (error) {
       console.error("Error fetching users:", error);

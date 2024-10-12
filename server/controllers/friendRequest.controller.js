@@ -10,7 +10,7 @@ const handleFriendRequest = async (req, res) => {
     console.log("The request is from", from);
     console.log("The request is to", to);
 
-    const userFrom = await User.findById(from);
+    const userFrom = await User.findById(from).select("username name email profilePic _id");
     const userTo = await User.findById(to);
 
     if (!userFrom || !userTo) {
@@ -38,13 +38,13 @@ const handleFriendRequest = async (req, res) => {
 
     // Emit event to recipient
     if (users[to]) {
-      io.to(users[to]).emit("friendRequestNotification", { from, status: "pending" });
+      io.to(users[to]).emit("friendRequestNotification", { userFrom });
     } else {
       console.log("The user is not online");
     }
 
     res.status(200).json({
-      message: `Friend request from user ${from} to user ${to} has been sent.`,
+      message: `Friend request from user ${userFrom.username} to user ${userTo.username} has been sent.`,
       userFrom: userFrom, 
     });
   } catch (error) {
@@ -70,7 +70,6 @@ const acceptFriendRequest = async (req, res) => {
 
     // Check if the friend request exists
     const requestIndex = userAccepter.friendRequests.findIndex((friendRequest) => {
-      // Defensive check to ensure friendRequest and friendRequest.from are defined
       return friendRequest && friendRequest.from && friendRequest.from.toString() === requester.toString();
     });
 
@@ -92,7 +91,9 @@ const acceptFriendRequest = async (req, res) => {
 
     // Emit event to requester
     if (users[requester]) {
-      io.to(users[requester]).emit("friendRequestNotification", { accepter, status });
+      io.to(users[requester]).emit("friendRequesterNotification", {
+        requestStatus: status
+      } );
     } else {
       console.log("The user is not online");
     }

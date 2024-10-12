@@ -1,14 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-enum NotificationStatus {
-    pending = "pending",
-    accepted = "accepted",
-    rejected = "rejected",
-}
+
 
 export interface Notification {
-    from: string;
-    status: NotificationStatus;
+    message: string;
 }
 
 interface NotificationState {
@@ -30,16 +25,12 @@ const notificationSlice = createSlice({
             state.notifications.push(action.payload);
             console.log("This is action payload",action.payload)
         },
-        clearNotification: (state, action: PayloadAction<{ user: string }>) => {
-            state.notifications = state.notifications.filter(
-                (notification) => notification.from !== action.payload.user
-            );
-        },
+        
         clearAllNotifications: (state) => {
             state.notifications = [];
         }
     }
 });
 
-export const { setNotification, clearNotification, clearAllNotifications } = notificationSlice.actions;
+export const { setNotification, clearAllNotifications } = notificationSlice.actions;
 export default notificationSlice.reducer;

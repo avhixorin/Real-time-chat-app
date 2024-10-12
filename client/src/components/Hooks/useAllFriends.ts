@@ -32,7 +32,7 @@ export const useAllFriends = () => {
 
       const data = await response.json();
       dispatch(setAllFriends(data.users));
-      console.log("this the is the data that was set in the allusers slice", allFriends);
+      
     } catch (error) {
       console.error("Error fetching users:", error);
     }

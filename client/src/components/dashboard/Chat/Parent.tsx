@@ -7,20 +7,26 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../Redux/store";
 import CloseIcon from '@mui/icons-material/Close';
+import { useAllUsers } from "@/components/Hooks/useAllUsers";
 
 const Parent: React.FC = () => {
-  const allusers = useSelector((state: RootState) => state.allUsers.allUsers);
+  const allusers = useAllUsers();
   const [acceptButtonText, setAcceptButtonText] = useState<string>("Accept");
   const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
+  const friendRequests = useSelector(
+    (state: RootState) => state.friendRequests.friendRequests
+  );
   const notifications = useSelector(
     (state: RootState) => state.notifications.notifications
   );
 
   const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState<boolean>(false);
+  const [notificationOpened, setNotificationOpened] = useState<boolean>(false);
   const [isFriendRequestSectionOpen, setIsFriendRequestSectionOpen] = useState<boolean>(false);
 
   const handleNotificationClick = () => {
     setIsNotificationPanelOpen((prev) => !prev);
+    setNotificationOpened(true);
   };
 
   const handleFriendRequestPanelClick = () => {
@@ -29,7 +35,7 @@ const Parent: React.FC = () => {
 
   const findUserName = (userId: string) => {
     const user = allusers.find((user) => user._id === userId);
-    return user ? user.name : "Unknown User";
+    return [user ? user.name : "Unknown User", user ? user.profilePic : "", user ? user.username : ""];
   };
 
   const handleRequest = async (requester: string, accepter: string, status: string) => {
@@ -71,7 +77,7 @@ const Parent: React.FC = () => {
           onClick={handleNotificationClick}
         >
           <NotificationsNoneIcon style={{ fontSize: 32, color: "white" }} />
-          {notifications.length > 0 && (
+          {!notificationOpened && notifications.length > 0 && (
             <div className="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full flex justify-center items-center">
               <p className="text-white text-xs">{notifications.length}</p>
             </div>
@@ -109,12 +115,11 @@ const Parent: React.FC = () => {
               <CloseIcon className="cursor-pointer" />
             </div>
           </div>
-          {notifications.length > 0 ? (
-            <ul>
+          { notifications && notifications.length > 0 ? (
+            <ul className="overflow-y-auto">
               {notifications.map((notification, index) => (
                 <li key={index} className="mb-1 flex justify-start items-center gap-4">
-                  <img src="https://randomuser.me/api/portraits/men/49.jpg" className="w-8 h-8 rounded-full shadow-lg" alt="" />
-                  {findUserName(notification.from)} : {notification.status}
+                  {notification.message}
                 </li>
               ))}
             </ul>
@@ -133,25 +138,29 @@ const Parent: React.FC = () => {
               </div>
             </div>
             <ul>
-              {notifications.length > 0 ? (
-                notifications.map((notification, index) => (
-                  <li key={index} className="flex justify-between items-center gap-4">
-                    <img src="https://randomuser.me/api/portraits/men/49.jpg" className="w-8 h-8 rounded-full shadow-lg" alt="" />
-                    <p>{findUserName(notification.from)}</p>
-                    <button
-                      className="bg-green-500 text-white py-1 px-2 rounded-lg hover:bg-green-600"
-                      onClick={() => loggedInUser && handleRequest(notification.from, loggedInUser._id, "accepted")}
-                    >
-                      {acceptButtonText}
-                    </button>
-                    <button
-                      className="bg-red-500 text-white py-1 px-2 rounded-lg hover:bg-red-600"
-                      onClick={() => loggedInUser && handleRequest(notification.from, loggedInUser._id, "rejected")}
-                    >
-                      Reject
-                    </button>
-                  </li>
-                ))
+              {friendRequests && friendRequests.length > 0 ? (
+                friendRequests.map((request, index) => {
+                  const [name, profilePic, username] = findUserName(request.from?._id);
+                  return (
+                    <li key={index} className="flex justify-between items-center gap-4">
+                      <img src={profilePic} className="w-8 h-8 rounded-full shadow-lg" alt="" />
+                      <p>{name}</p>
+                      <p>{username}</p>
+                      <button
+                        className="bg-green-500 text-white py-1 px-2 rounded-lg hover:bg-green-600"
+                        onClick={() => loggedInUser && handleRequest(request.from?._id, loggedInUser._id, "accepted")}
+                      >
+                        {acceptButtonText}
+                      </button>
+                      <button
+                        className="bg-red-500 text-white py-1 px-2 rounded-lg hover:bg-red-600"
+                        onClick={() => loggedInUser && handleRequest(request.from?._id, loggedInUser._id, "rejected")}
+                      >
+                        Reject
+                      </button>
+                    </li>
+                  );
+                })
               ) : (
                 <p>No friend requests</p>
               )}
