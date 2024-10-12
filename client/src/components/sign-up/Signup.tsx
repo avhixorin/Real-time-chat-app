@@ -8,6 +8,7 @@ const Signup:React.FC = () => {
   const navigate = useNavigate();
   const [formData,setFormData] = useState({
     name: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -52,6 +53,18 @@ const Signup:React.FC = () => {
           variant="outlined"
           fullWidth
           onChange={(e) => setFormData({...formData, name: e.target.value})}
+          className="mb-4"
+          InputLabelProps={{
+            className: 'text-gray-600'
+          }}
+        />
+
+        {/* Username Input */}
+        <TextField
+          label="Username"
+          variant="outlined"
+          fullWidth
+          onChange={(e) => setFormData({...formData, username: e.target.value})}
           className="mb-4"
           InputLabelProps={{
             className: 'text-gray-600'

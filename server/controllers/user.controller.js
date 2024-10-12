@@ -1,9 +1,10 @@
 import User from "../models/user.model.js";
 import cloudinaryUpload from "../utils/cloudinaryUpload.js";
+
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email,username, password } = req.body;
   try {
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email,username, password });
     res.status(201).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -29,7 +30,7 @@ const getAllFriends = async (req, res) => {
     const { loggedInUserId } = req.body;
     if (loggedInUserId) console.log("This is the userId of the currently logged in user", loggedInUserId);
 
-    const users = await User.find({ _id: { $ne: loggedInUserId } }).select("_id name email");
+    const users = await User.find({ _id: { $ne: loggedInUserId } }).select("_id name email username profilePic");
     
     res.status(200).json({
       message: `All the friends of the user with ID ${loggedInUserId} have been fetched successfully`,
@@ -42,7 +43,7 @@ const getAllFriends = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select("_id name email");
+    const users = await User.find().select("_id name email username profilePic");
     res.status(200).json({
       message: "All users have been fetched successfully",
       users: users
@@ -56,6 +57,7 @@ const getAllUsers = async (req, res) => {
 const uploadController = async(req, res) => {
   const { userId } = req.body;
   console.log("This is the user ID of the user uploading the file", userId);
+
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
   }

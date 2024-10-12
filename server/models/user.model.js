@@ -11,6 +11,12 @@ const userSchema = new Schema({
     unique: true,
     index: true,
   },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true,
+  },
   profilePic: {
     type: String,
     default: "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png",
