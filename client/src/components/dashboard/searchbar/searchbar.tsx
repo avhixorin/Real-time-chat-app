@@ -1,28 +1,43 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import SearchCard from "./SearchCard";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../Redux/store";
+import { User } from "@/Redux/features/allUsersSlice";
+import { useAllUsers } from "@/components/Hooks/useAllUsers";
 
 const SearchBar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]); // Store filtered users in state
   const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const allUsers = useSelector((state: RootState) => state.allUsers.allUsers);
+  const allUsers = useAllUsers();
 
-  const filteredUsers = useMemo(() => {
-    return allUsers.filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [allUsers, searchTerm]);
+  useEffect(() => {
+    // Filter users when searchTerm changes
+    const getFilteredUsers = () => {
+      const filtered = allUsers.filter(
+        (user) =>
+          (user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.username?.toLowerCase().includes(searchTerm.toLowerCase())) // Check if name or username exists before using toLowerCase()
+      );
+      setFilteredUsers(filtered); // Update state with filtered users
+    };
+
+    getFilteredUsers();
+  }, [searchTerm, allUsers]); // Trigger on searchTerm or allUsers change
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
   const handleClickOutside = useCallback((e: MouseEvent) => {
-    if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
-      setSearchTerm(""); 
+    if (
+      inputRef.current &&
+      !inputRef.current.contains(e.target as Node) &&
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target as Node)
+    ) {
+      setSearchTerm(""); // Clear the search term when clicked outside
     }
   }, []);
 
@@ -48,14 +63,11 @@ const SearchBar: React.FC = () => {
           </svg>
         </label>
       </div>
-      
+
       {searchTerm && (
-        <div className="dropdown">
+        <div className="dropdown" ref={dropdownRef}>
           {filteredUsers.map((user) => (
-            <SearchCard
-              key={user._id}
-              user={user}
-            />
+            <SearchCard key={user._id} user={user} />
           ))}
         </div>
       )}

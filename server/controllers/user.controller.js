@@ -53,7 +53,6 @@ const getAllUsers = async (req, res) => {
   }
 }
 
-
 const uploadController = async(req, res) => {
   const { userId } = req.body;
   console.log("This is the user ID of the user uploading the file", userId);

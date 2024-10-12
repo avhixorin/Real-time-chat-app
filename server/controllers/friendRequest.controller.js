@@ -7,11 +7,14 @@ import mongoose from "mongoose";
 const handleFriendRequest = async (req, res) => {
   try {
     const { from, to } = req.body;
+    console.log("The request is from", from);
+    console.log("The request is to", to);
 
     const userFrom = await User.findById(from);
     const userTo = await User.findById(to);
 
     if (!userFrom || !userTo) {
+      console.log("User not found");
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -42,6 +45,7 @@ const handleFriendRequest = async (req, res) => {
 
     res.status(200).json({
       message: `Friend request from user ${from} to user ${to} has been sent.`,
+      userFrom: userFrom, 
     });
   } catch (error) {
     console.log(error.message);
