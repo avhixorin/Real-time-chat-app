@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface User {
+export interface User {
   _id: string;
   name: string;
   email: string;
+  username: string;
   password: string;
+  profilePic: string;
   friends: string[];
   friendRequests: string[];
   messages: string[]; 
@@ -16,6 +18,7 @@ const initialState: User = {
   name: "",
   email: "",
   password: "",
+  profilePic: "",
   friends: [],
   friendRequests: [],
   messages: [],

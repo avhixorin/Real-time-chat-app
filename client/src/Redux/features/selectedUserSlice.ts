@@ -4,6 +4,8 @@ export interface SelectedUser {
   _id: string;
   name: string;
   email: string;
+  username: string;
+  profilePic: string;
 }
 
 interface SelectedUserState {

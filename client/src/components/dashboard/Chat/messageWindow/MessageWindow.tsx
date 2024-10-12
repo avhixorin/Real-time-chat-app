@@ -5,14 +5,6 @@ import { RootState } from "../../../../Redux/store";
 import { addMessage, clearMessagesForUser, Message } from "../../../../Redux/features/messagesSlice";
 import { useSocket } from "../../../Hooks/useSocket";
 
-const randomImages = [
-  "https://randomuser.me/api/portraits/women/48.jpg",
-  "https://randomuser.me/api/portraits/women/49.jpg",
-  "https://randomuser.me/api/portraits/women/50.jpg",
-];
-
-const getRandomInt = (max: number) => Math.floor(Math.random() * max);
-
 const Chat: React.FC = () => {
   const loggedInUser = useSelector((state: RootState) => state.loggedInUser) as { _id: string } | null;
   const dispatch = useDispatch();
@@ -20,7 +12,6 @@ const Chat: React.FC = () => {
   const [message, setMessage] = useState("");
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
-  const [userImage] = useState(randomImages[getRandomInt(randomImages.length)]);
 
   const selectedUser = useSelector((state: RootState) => state.selectedUser.selectedUser);
   const messages = useSelector((state: RootState) =>
@@ -69,19 +60,27 @@ const Chat: React.FC = () => {
         <main className="flex flex-col h-full w-full">
           {/* Header */}
           <header className="w-full py-2 px-4 flex items-center justify-between bg-[#00A884] text-slate-200">
-            <div className="flex gap-6 items-center">
+            {
+              selectedUser ? (
+                <>
+                <div className="flex gap-6 items-center">
               <img
-                src={userImage}
+                src={selectedUser?.profilePic || "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png"}
                 className="rounded-full w-10 h-10"
                 alt="User Profile"
               />
               <h3 className="font-medium text-lg">
-                {selectedUser?.name || "Select a user to start chatting"}
+                {selectedUser?.name || "User Name"}
               </h3>
             </div>
             <h3 className={isOnline ? "text-[#d7d0d0]" : "text-slate-400"}>
               {isOnline ? "Active now" : "Last online: 12:53 AM"}
             </h3>
+                </>
+              ) : (
+                "Select a user to start chatting"
+              )
+            }
           </header>
 
           {/* Chat Area (Messages) */}

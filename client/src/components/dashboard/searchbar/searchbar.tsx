@@ -20,16 +20,16 @@ const SearchBar: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
-  // const handleClickOutside = useCallback((e: MouseEvent) => {
-  //   if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
-  //     setSearchTerm(""); 
-  //   }
-  // }, []);
+  const handleClickOutside = useCallback((e: MouseEvent) => {
+    if (inputRef.current && !inputRef.current.contains(e.target as Node)) {
+      setSearchTerm(""); 
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => document.removeEventListener("mousedown", handleClickOutside);
-  // }, [handleClickOutside]);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [handleClickOutside]);
 
   return (
     <StyledWrapper>
@@ -54,9 +54,7 @@ const SearchBar: React.FC = () => {
           {filteredUsers.map((user) => (
             <SearchCard
               key={user._id}
-              userId={user._id}
-              name={user.name}
-              imgSrc="http://res.cloudinary.com/avhixorin/image/upload/v1726055586/uhx8qpqutwbyq2yqtsyj.jpg"
+              user={user}
             />
           ))}
         </div>

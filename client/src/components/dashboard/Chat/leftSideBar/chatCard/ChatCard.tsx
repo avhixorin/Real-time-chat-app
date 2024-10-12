@@ -7,14 +7,14 @@ interface user {
   _id: string;
   name: string;
   email: string;
+  profilePic: string;
 }
 
 interface Props {
-  imgSrc: string;
   user: user;
 }
 
-const ChatCard: React.FC<Props> = ({ imgSrc, user }) => {
+const ChatCard: React.FC<Props> = ({ user }) => {
   const dispatch = useDispatch();
 
   const onClick = () => {
@@ -26,7 +26,7 @@ const ChatCard: React.FC<Props> = ({ imgSrc, user }) => {
       className={`w-full flex py-3 px-4 gap-4 items-center justify-around bg-white hover:bg-gray-100 transition-colors duration-300 border-b border-gray-300 cursor-pointer`}
       onClick={onClick}
     >
-      <img src={imgSrc} alt="User Avatar" className="w-10 h-10 rounded-full shadow-lg" />
+      <img src={user.profilePic || "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png"} alt="User Avatar" className="w-10 h-10 rounded-full shadow-lg" />
 
       <div className="flex flex-col flex-grow">
         <p className="font-semibold text-base text-gray-800">{user.name}</p>

@@ -4,7 +4,8 @@ interface User {
   _id: string;
   name: string;
   email: string;
-
+  usrname: string;
+  profilePic: string;
 }
 interface AllFriends {
   allFriends: User[];

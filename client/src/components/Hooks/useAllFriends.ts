@@ -33,8 +33,6 @@ export const useAllFriends = () => {
       const data = await response.json();
       dispatch(setAllFriends(data.users));
       console.log("this the is the data that was set in the allusers slice", allFriends);
-      // console.log("This is the getAll users request");
-      // console.log(data);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -43,6 +41,7 @@ export const useAllFriends = () => {
 
   useEffect(() => {
     getallfriends();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedInUserId]);
 
   return allFriends;

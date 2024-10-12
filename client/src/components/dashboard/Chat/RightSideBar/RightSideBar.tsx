@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../Redux/store';
 import { useDispatch } from 'react-redux';
@@ -6,6 +6,7 @@ import { setLogoutUser } from '../../../../Redux/features/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { clearAllMessages } from '../../../../Redux/features/messagesSlice';
 import { clearAllNotifications } from '../../../../Redux/features/notificationsSlice';
+import Upload from './Upload/Upload';
 
 interface Props {
   handleFriendRequestPanelClick: () => void
@@ -14,7 +15,11 @@ interface Props {
 const RightSideBar: React.FC<Props> = ({handleFriendRequestPanelClick}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.loggedInUser);
+  const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
+  const [uploadClicked, setUploadClicked] = useState(false);
+  const cancelUpload = () => {
+    setUploadClicked(false);
+  };
 
   const handleLogout = () => {
     navigate('/login');
@@ -24,20 +29,25 @@ const RightSideBar: React.FC<Props> = ({handleFriendRequestPanelClick}) => {
 
 
   return (
-    <div className='w-full h-full flex flex-col items-center p-6 bg-white shadow-lg rounded-e-lg'>
+    <div className='relative w-full h-full flex flex-col items-center p-6 bg-white shadow-lg rounded-e-lg'>
       {/* Profile Picture */}
+      <div className={`w-full h-full relative ${uploadClicked ? "block" : "hidden"}`}>
+        <Upload cancelUpload={cancelUpload} setUploadClicked={setUploadClicked} />
+      </div>
       <div className="w-24 h-24 mb-4">
         <img
-          src={'https://via.placeholder.com/150'} // Replace with actual profile image URL from user object if available
-          alt={`${user?.name}'s Profile`}
+          src={loggedInUser?.profilePic || "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png"}
+          
+          alt={`${loggedInUser?.name}'s Profile`}
           className="rounded-full w-full h-full object-cover border-2 border-gray-300"
+          onClick={() => setUploadClicked(true)}
         />
       </div>
 
       {/* User Info */}
       <div className="text-center mb-6">
-        <h2 className="text-xl font-semibold">{user?.name || 'Guest User'}</h2>
-        <p className="text-gray-600">{user?.email || 'guest@example.com'}</p>
+        <h2 className="text-xl font-semibold">{loggedInUser?.name || 'Guest User'}</h2>
+        <p className="text-gray-600">{loggedInUser?.email || 'guest@example.com'}</p>
       </div>
 
       {/* Action Buttons */}

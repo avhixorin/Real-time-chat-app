@@ -69,7 +69,7 @@ const uploadController = async(req, res) => {
     user.profilePic = cloudinaryReponse.url;
     await user.save();
     
-    res.status(200).json({ message: "File uploaded successfully" });
+    res.status(200).json({ message: "File uploaded successfully", user: user });
 
   } catch (error) {
     res.status(500).json({ error: error.message });

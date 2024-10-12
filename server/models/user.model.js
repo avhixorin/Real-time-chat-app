@@ -13,6 +13,7 @@ const userSchema = new Schema({
   },
   profilePic: {
     type: String,
+    default: "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png",
   },
   password: {
     type: String,
