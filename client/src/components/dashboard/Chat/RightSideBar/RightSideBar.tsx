@@ -40,7 +40,7 @@ const RightSideBar: React.FC<Props> = ({handleFriendRequestPanelClick}) => {
           src={loggedInUser?.profilePic || defaultProfilePic}
           
           alt={`${loggedInUser?.name}'s Profile`}
-          className="rounded-full w-full h-full object-cover border-2 border-gray-300"
+          className="rounded-full w-full h-full object-cover border-2 border-gray-300 cursor-pointer"
           onClick={() => setUploadClicked(true)}
         />
       </div>
