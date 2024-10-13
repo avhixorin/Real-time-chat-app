@@ -29,7 +29,7 @@ const userSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "User",
-    },
+    }
   ],
   friendRequests: [
     {
@@ -42,6 +42,7 @@ const userSchema = new Schema({
         enum: ["pending", "accepted", "rejected"],
         default: "pending",
       },
+      _id: false,
     },
   ],
 });

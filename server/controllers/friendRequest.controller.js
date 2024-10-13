@@ -87,8 +87,8 @@ const acceptFriendRequest = async (req, res) => {
     }
 
     // Populate the updated friends list for the accepter
-    const updatedUserAccepter = await User.findById(accepter).populate('friends', '_id name username email profilePic');
-    const updatedUserRequester = await User.findById(requester).populate('friends', '_id name username email profilePic');
+    // const updatedUserAccepter = await User.findById(accepter).populate('friends', '_id name username email profilePic');
+    // const updatedUserRequester = await User.findById(requester).populate('friends', '_id name username email profilePic');
 
     // Emit event to requester
     if (users[requester]) {

@@ -56,8 +56,7 @@ const Parent: React.FC = () => {
         setIsFriendRequestSectionOpen(false);
         setAcceptButtonText("Accept");
       }, 1000);
-
-      console.log(data);
+      
     } catch (error) {
       console.log((error as Error).message);
       setAcceptButtonText("Accept");

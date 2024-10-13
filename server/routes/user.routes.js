@@ -21,7 +21,7 @@ router.post("/login", loginUser);
 
 // Protected Routes
 router.post("/getallfriends", getAllFriends);
-router.get("/getallusers", getAllUsers);
+router.post("/getallusers", getAllUsers);
 // Friend Request Routes
 router.post("/sendfriendrequest", handleFriendRequest);
 router.patch('/friendrequest/:requester/:accepter/:status', acceptFriendRequest);

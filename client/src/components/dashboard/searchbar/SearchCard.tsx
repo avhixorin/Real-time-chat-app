@@ -1,7 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../Redux/store';
 import { User } from '@/Redux/features/allUsersSlice';
+import { setNotification } from '@/Redux/features/notificationsSlice';
 
 interface SearchCardProps {
   user: User;
@@ -10,9 +11,10 @@ interface SearchCardProps {
 const SearchCard:React.FC<SearchCardProps> = ({ user }) => {
   const defaultProfilePic = "https://res.cloudinary.com/avhixorin/image/upload/v1724570240/profile-default_uo3gzg.png"; 
   const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
+  const dispatch = useDispatch();
   
   const handleFriendRequest = async() => {
-    console.log("The friend request id from", loggedInUser?._id, "to", user._id);
+
     try {
       const response = await fetch("http://localhost:3000/api/v1/users/sendfriendrequest",{
         method: 'POST',
@@ -25,10 +27,10 @@ const SearchCard:React.FC<SearchCardProps> = ({ user }) => {
       if (!response.ok) {
         throw new Error(`Error ${response.status}: Failed to send friend request`);
       }
-      console.log('Friend Request Sent');
+
 
       const data = await response.json();
-      console.log(data);
+      dispatch(setNotification(data.notification));
 
     } catch (error) {
       console.log("The error is ", (error as Error).message);

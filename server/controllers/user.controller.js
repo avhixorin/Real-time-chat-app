@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import mongoose from "mongoose";
 import cloudinaryUpload from "../utils/cloudinaryUpload.js";
 
 const registerUser = async (req, res) => {
@@ -28,13 +29,26 @@ const loginUser = async (req, res) => {
 const getAllFriends = async (req, res) => {
   try {
     const { loggedInUserId } = req.body;
-    if (loggedInUserId) console.log("This is the userId of the currently logged in user", loggedInUserId);
+    
+    if (loggedInUserId) {
+      console.log("This is the userId of the currently logged-in user:", loggedInUserId);
+    }
 
-    const usersFriends = await User.find(loggedInUserId).select("friends");
+    // Fetch the user and populate the 'friends' array
+    const user = await User.findById(loggedInUserId)
+      .populate({
+        path: 'friends', // Populate the friends array with full user details
+        select: 'name email username profilePic' // Select specific fields
+      })
+      .exec();
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     res.status(200).json({
       message: `All the friends of the user with ID ${loggedInUserId} have been fetched successfully`,
-      friends: usersFriends
+      friends: user.friends // Send the populated friends array
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
