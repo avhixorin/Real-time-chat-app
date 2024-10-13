@@ -113,7 +113,7 @@ const Parent: React.FC = () => {
           </div>
           { notifications && notifications.length > 0 ? (
             <ul className="overflow-y-auto">
-              {notifications.map((notification, index) => (
+              {notifications.filter(notification => notification).map((notification, index) => (
                 <li key={index} className="mb-1 flex justify-start items-center gap-4">
                   {notification.message}
                 </li>

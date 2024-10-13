@@ -22,6 +22,7 @@ const allUsersSlice = createSlice({
     setAllUsers: (state, action: PayloadAction<User[]>) => {
       state.allUsers = action.payload;
     },
+    
   },
 });
 
