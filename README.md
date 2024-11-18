@@ -115,7 +115,7 @@ npm run start:prod
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact 📬
-- [avhixorin]
+  #### avhixorin
 - Project Link: [real-time-chat-app](https://github.com/avhixorin/Real-time-chat-app)
 - Email: avhixorin@gmail.com
 
@@ -124,4 +124,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - [X] Add language translation
 - [X] Develop mobile app version
 - [X] Integrate advanced analytics
-```
+
