@@ -115,8 +115,8 @@ npm run start:prod
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact 📬
-- Your Name: [avhixorin]
-- Project Link: [https://github.com/yourusername/real-time-chat-app](https://github.com/yourusername/real-time-chat-app)
+- [avhixorin]
+- Project Link: [real-time-chat-app](https://github.com/avhixorin/Real-time-chat-app)
 - Email: avhixorin@gmail.com
 
 ## Future Roadmap 🗺️
